@@ -33,8 +33,7 @@ jobs:
 
       - name: test
         run: 
-          make --makefile="mkd.mk" redis-create redis_port=6399
-          make test
+          make --makefile="mkd.mk" redis-create redis_port=6399 & make test
 
       - name: build
         run: make build
