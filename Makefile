@@ -120,9 +120,6 @@ deps:
 	# golint
 	go ${depcmd} golang.org/x/lint/golint@latest
 	# deps
-	go ${depcmd} github.com/fasthttp/router
-	go ${depcmd} github.com/valyala/fasthttp
-	go ${depcmd} github.com/gomodule/redigo
 	go mod download
 	
 ## cross platform build
