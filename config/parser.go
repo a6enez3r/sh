@@ -13,6 +13,7 @@ type Config struct {
 		Host     string `json:"host"`
 		Port     string `json:"port"`
 		Password string `json:"password"`
+		Username string `json:"username"`
 	} `json:"redis"`
 	Options struct {
 		Schema string `json:"schema"`

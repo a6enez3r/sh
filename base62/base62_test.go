@@ -1,8 +1,8 @@
 package base62
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestEncodeReturnType(t *testing.T) {
@@ -25,5 +25,5 @@ func TestDecodeReturnType(t *testing.T) {
 
 func TestEncodeSuccessive(t *testing.T) {
 	encoded := Encode(7)
-	assert.ObjectsAreEqual(Encode(7),encoded)
+	assert.ObjectsAreEqual(Encode(7), encoded)
 }

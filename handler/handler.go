@@ -91,7 +91,7 @@ func (h handler) encode(ctx *fasthttp.RequestCtx) (interface{}, int, error) {
 
 func (h handler) decode(ctx *fasthttp.RequestCtx) (interface{}, int, error) {
 	code := ctx.UserValue("shortLink").(string)
-	
+
 	model, err := h.storage.LoadInfo(code)
 	if err != nil {
 		return nil, http.StatusNotFound, fmt.Errorf("URL not found")

@@ -25,13 +25,14 @@ func (r *ErrNoLink) Error() string {
 type redis struct{ pool *redisClient.Pool }
 
 // New : create a new Redis connection pool
-func New(host, port, password string) (storage.Service, error) {
+func New(host, port, password, username string) (storage.Service, error) {
 	pool := &redisClient.Pool{
 		MaxIdle:     10,
 		IdleTimeout: 240 * time.Second,
 		Dial: func() (redisClient.Conn, error) {
-			// TODO: add support for username + password
-			return redisClient.Dial("tcp", fmt.Sprintf("%s:%s", host, port))
+			return redisClient.DialURL(
+				fmt.Sprintf("redis://%s:%s@%s:%s", username, password, host, port),
+			)
 		},
 	}
 

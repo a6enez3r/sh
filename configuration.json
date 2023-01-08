@@ -8,8 +8,9 @@
     },
     "redis": {
       "host": "127.0.0.1",
-      "port": "6379",
-      "password": "supersecret"
+      "port": "6399",
+      "password": "pw",
+      "username": ""
     }
 }
    

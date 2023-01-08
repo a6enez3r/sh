@@ -26,12 +26,15 @@ jobs:
       - name: deps
         run: |
           make deps depcmd=get
+          curl https://raw.githubusercontent.com/abmamo/mkd/main/Makefile --output mkd.mk
 
       - name: lint
         run: make lint
 
       - name: test
-        run: make test
+        run: 
+          make --makefile="mkd.mk" redis-create redis_port=6399
+          make test
 
       - name: build
         run: make build

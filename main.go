@@ -19,6 +19,7 @@ func main() {
 		configuration.Redis.Host,
 		configuration.Redis.Port,
 		configuration.Redis.Password,
+		configuration.Redis.Username,
 	)
 	if err != nil {
 		log.Fatal(err)
