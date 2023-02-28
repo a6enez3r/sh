@@ -1,11 +1,11 @@
-# fwdr ![build](https://github.com/a6enez3r/fwdr/workflows/build/badge.svg?branch=main)
+# sh ![build](https://github.com/a6enez3r/sh/workflows/build/badge.svg?branch=main)
 
 link shortening and forwarding in 3 tiny Go packages :)
 
 ## quickstart
 download the binary [for your platform] using `curl`
 ```
-  curl -L  https://github.com/a6enez3r/fwdr/raw/main/builds/fwdr-darwin-amd64 >> fwdr && chmod +x ./fwdr
+  curl -L  https://github.com/a6enez3r/sh/raw/main/builds/sh-darwin-amd64 >> sh && chmod +x ./sh
 ```
 
 start a `Redis` server
@@ -34,7 +34,7 @@ create a configuration file describing how to connect to `Redis` and such
 
 start the forwarder server
 ```
-  ./fwdr
+  ./sh
 ```
 once you have the link forwarder running you can shorten links using `curl` for instance
 
