@@ -1,4 +1,4 @@
-pn := fwdr
+pn := sh
 
 ifeq ($(version),)
 version := 0.0.1
@@ -136,7 +136,7 @@ test:
 
 ## benchmark package
 benchmark:
-	go test -bench=. ./fwdr/
+	go test -bench=. ./sh/
 
 ## test coverage
 coverage:

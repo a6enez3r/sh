@@ -19,7 +19,7 @@ func MockConfig(path string) {
 		  "host": "127.0.0.1",
 		  "port": "6379",
 		  "password": "supersecret",
-		  "username": "fwdr"
+		  "username": "sh"
 		}
 	}`)
 	config := Config{}

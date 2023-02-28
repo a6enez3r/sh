@@ -3,8 +3,8 @@ package redis
 import (
 	"errors"
 	"fmt"
-	"fwdr/base62"
-	"fwdr/storage"
+	"sh/base62"
+	"sh/storage"
 	redisClient "github.com/garyburd/redigo/redis"
 	"math/rand"
 	"strconv"

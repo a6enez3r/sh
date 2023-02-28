@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fwdr/config"
-	"fwdr/handler"
-	"fwdr/storage/redis"
+	"sh/config"
+	"sh/handler"
+	"sh/storage/redis"
 	"log"
 
 	"github.com/valyala/fasthttp"

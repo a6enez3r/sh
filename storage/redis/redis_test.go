@@ -2,7 +2,7 @@ package redis
 
 import (
 	"os"
-	"fwdr/base62"
+	"sh/base62"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

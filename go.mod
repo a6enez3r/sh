@@ -1,4 +1,4 @@
-module fwdr
+module sh
 
 go 1.17
 
