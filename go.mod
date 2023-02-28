@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/fasthttp/router v1.4.16
 	github.com/garyburd/redigo v1.6.4
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	github.com/valyala/fasthttp v1.44.0
 )
 
