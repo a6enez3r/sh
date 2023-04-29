@@ -6,7 +6,7 @@ require (
 	github.com/fasthttp/router v1.4.18
 	github.com/garyburd/redigo v1.6.4
 	github.com/stretchr/testify v1.8.2
-	github.com/valyala/fasthttp v1.45.0
+	github.com/valyala/fasthttp v1.46.0
 )
 
 require (
