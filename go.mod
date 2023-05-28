@@ -3,10 +3,10 @@ module sh
 go 1.17
 
 require (
-	github.com/fasthttp/router v1.4.18
+	github.com/fasthttp/router v1.4.19
 	github.com/garyburd/redigo v1.6.4
 	github.com/stretchr/testify v1.8.3
-	github.com/valyala/fasthttp v1.46.0
+	github.com/valyala/fasthttp v1.47.0
 )
 
 require (
