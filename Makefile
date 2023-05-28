@@ -136,7 +136,7 @@ test:
 
 ## benchmark package
 benchmark:
-	go test -bench=. ./sh/
+	go test -bench=. main.go
 
 ## test coverage
 coverage:
