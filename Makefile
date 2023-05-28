@@ -3,23 +3,23 @@ pn := sh
 ifeq ($(version),)
 version := 0.0.1
 endif
-ifeq ($(cm),)
-cm := default commit message
+ifeq ($(commit_message),)
+commit_message := default commit message
 endif
 ifeq ($(branch),)
 branch := main
 endif
-ifeq ($(${denv}),)
-denv := development
+ifeq ($(${docker_env}),)
+docker_env := development
 endif
-ifeq ($(cname),)
-cname := jak_${denv}
+ifeq ($(container_name),)
+container_name := jak_${docker_env}
 endif
-ifeq ($(ctag),)
-ctag := latest
+ifeq ($(container_tag),)
+container_tag := latest
 endif
-ifeq ($(${depcmd}),)
-depcmd := install
+ifeq ($(${dep_cmd}),)
+dep_cmd := install
 endif
 
 .DEFAULT_GOAL := help
@@ -86,7 +86,7 @@ help:
 save-local:
 	@echo "saving..."
 	@git add .
-	@git commit -m "${cm}"
+	@git commit -m "${commit_message}"
 
 ## save changes to remote using git
 save-remote:
@@ -100,10 +100,10 @@ pull-remote:
 
 ## create new tag, recreate if it exists
 tag:
-	git tag -d ${version} || : 
-	git push --delete origin ${version} || : 
-	git tag -a ${version} -m "latest" 
-	git push origin --tags
+	@git tag -d ${version} || : 
+	@git push --delete origin ${version} || : 
+	@git tag -a ${version} -m "latest" 
+	@git push origin --tags
 
 ## -- go --
 
@@ -112,13 +112,13 @@ deps:
 	# gosec
 	# sudo curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v2.9.5
 	# golines
-	go ${depcmd} github.com/segmentio/golines@latest
+	go ${dep_cmd} github.com/segmentio/golines@latest
 	# errcheck
-	go ${depcmd} github.com/kisielk/errcheck@latest
+	go ${dep_cmd} github.com/kisielk/errcheck@latest
 	# dupl
-	go ${depcmd} github.com/mibk/dupl@latest
+	go ${dep_cmd} github.com/mibk/dupl@latest
 	# golint
-	go ${depcmd} golang.org/x/lint/golint@latest
+	go get golang.org/x/lint/golint
 	# deps
 	go mod download
 	
@@ -148,9 +148,16 @@ vet:
 
 ## -- code quality --
 
+UNAME_S := $(shell uname -s)
+
 ## lint package
 lint:
-	golint .
+ifeq ($(UNAME_S),Linux)
+	@~/go/bin/golint .
+endif
+ifeq ($(UNAME_S),Darwin)
+	@golint .
+endif
 
 ## format package
 format:
@@ -176,19 +183,19 @@ scan-security:
 
 ## build docker env
 build-env:
-	@docker build -t ${cname}:${ctag} -f dockerfiles/Dockerfile.${denv} .
+	@docker build -t ${container_name}:${container_tag} -f dockerfiles/Dockerfile.${docker_env} .
 
 ## start docker env
 up-env: build-env
-	$(eval cid = $(shell (docker ps -aqf "name=${cname}")))
+	$(eval cid = $(shell (docker ps -aqf "name=${container_name}")))
 	$(if $(strip $(cid)), \
 		@echo "existing env container found. please run make purge-env",\
-		@echo "running env container..." && docker run -it -d -v $(CURDIR):/go/src/ --name ${cname} ${cname}:${ctag} /bin/bash)
+		@echo "running env container..." && docker run -it -d -v $(CURDIR):/go/src/ --name ${container_name} ${container_name}:${container_tag} /bin/bash)
 	$(endif)
 
 ## exec. into docker env
 exec-env:
-	$(eval cid = $(shell (docker ps -aqf "name=${cname}")))
+	$(eval cid = $(shell (docker ps -aqf "name=${container_name}")))
 	$(if $(strip $(cid)), \
 		@echo "exec into env container..." && docker exec -it ${cid} bash,\
 		@echo "env container not running.")
@@ -196,15 +203,15 @@ exec-env:
 
 ## remove docker env
 purge-env:
-	$(eval cid = $(shell (docker ps -aqf "name=${cname}")))
+	$(eval cid = $(shell (docker ps -aqf "name=${container_name}")))
 	$(if $(strip $(cid)), \
-		@echo "purging env container..." && docker stop ${cname} && docker rm ${cname},\
+		@echo "purging env container..." && docker stop ${container_name} && docker rm ${container_name},\
 		@echo "env container not running.")
 	$(endif)
 
 ## get status of docker env
 status-env:
-	$(eval cid = $(shell (docker ps -aqf "name=${cname}")))
+	$(eval cid = $(shell (docker ps -aqf "name=${container_name}")))
 	$(if $(strip $(cid)), \
 		@echo "container running",\
 		@echo "container not running.")
