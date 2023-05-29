@@ -1,21 +1,25 @@
 # `sh` [![pipeline](https://github.com/a6enez3r/sh/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/a6enez3r/sh/actions/workflows/pipeline.yml)
 
-link shortening and forwarding in 3 tiny Go packages :)
+link shortening and forwarding in 4 tiny Go packages :)
 
-## quickstart
+## install
+
 download the binary [for your platform] using `curl`
 ```
   curl -L  https://github.com/a6enez3r/sh/raw/main/builds/sh-darwin-amd64 >> sh && chmod +x ./sh
 ```
 
+## `quickstart`
+
 start a `Redis` server
 
-```
+```shell
   redis-server
 ```
 
 create a configuration file describing how to connect to `Redis` and such
-```
+
+```json
   {
       "server": {
         "port": "8080"
@@ -33,12 +37,13 @@ create a configuration file describing how to connect to `Redis` and such
 ```
 
 start the forwarder server
-```
+
+```shell
   ./sh
 ```
 once you have the link forwarder running you can shorten links using `curl` for instance
 
-```
+```shell
 curl -L -X POST 'localhost:8080/encode' \
   -H 'Content-Type: application/json' \
   --data-raw '{
@@ -48,7 +53,7 @@ curl -L -X POST 'localhost:8080/encode' \
 ```
 which will return a much shorter link `{"success":true,"shortUrl":"http://localhost:8080/N0Q9H0NdYuk"}`
 
-## develop
+## `develop`
 ```
 usage:
   make <cmd>
