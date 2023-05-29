@@ -34,8 +34,10 @@ jobs:
       - name: redis
         run: |
           curl https://raw.githubusercontent.com/abmamo/mkd/main/Makefile --output mkd.mk
-          make --makefile="mkd.mk" redis-create && time.sleep(5)
-
+        # make --makefile="mkd.mk" redis-create && time.sleep(5)
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        
       - name: test
         run: make test
 
