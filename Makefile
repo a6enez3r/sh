@@ -135,11 +135,11 @@ build-all:
 
 ## current platform build
 build:
-	@go build -o ${pn} main.go cli.go
+	@go build -o ${pn} main.go
 
 ## run package
 run:
-	@go run main.go cli.go
+	@go run main.go
 
 ## test package
 test:
