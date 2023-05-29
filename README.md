@@ -2,7 +2,7 @@
 
 link shortening and forwarding in 4 tiny Go packages :)
 
-## install
+## `install`
 
 download the binary [for your platform] using `curl`
 ```
