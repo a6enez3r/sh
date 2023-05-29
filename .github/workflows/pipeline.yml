@@ -34,7 +34,7 @@ jobs:
       - name: redis
         run: |
           curl https://raw.githubusercontent.com/abmamo/mkd/main/Makefile --output mkd.mk
-          make --makefile="mkd.mk" redis-create & 
+          make --makefile="mkd.mk" redis-create redis_port=6399 & 
 
       - name: test
         run: make test
