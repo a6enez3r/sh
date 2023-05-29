@@ -26,10 +26,15 @@ jobs:
       - name: deps
         run: |
           make deps
-
+        
       - name: lint
         run: |
           make lint bin_path=/home/runner/go/bin/
+
+      - name: redis
+        run: |
+          curl https://raw.githubusercontent.com/abmamo/mkd/main/Makefile --output mkd.mk
+          make --makefile="mkd.mk" redis-create && time.sleep(5)
 
       - name: test
         run: make test
