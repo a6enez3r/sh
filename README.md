@@ -1,4 +1,4 @@
-# sh ![build](https://github.com/a6enez3r/sh/workflows/build/badge.svg?branch=main)
+# `sh` [![pipeline](https://github.com/a6enez3r/sh/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/a6enez3r/sh/actions/workflows/pipeline.yml)
 
 link shortening and forwarding in 3 tiny Go packages :)
 

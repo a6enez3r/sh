@@ -1,4 +1,4 @@
-name: build
+name: pipeline
 
 on: [push, pull_request]
 
@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-    
+      
       - name: set up Go ${{ matrix.go-version }}
         uses: actions/setup-go@v2
         with:
@@ -25,15 +25,14 @@ jobs:
     
       - name: deps
         run: |
-          make deps depcmd=install
-          curl https://raw.githubusercontent.com/abmamo/mkd/main/Makefile --output mkd.mk
+          make deps
 
       - name: lint
-        run: make lint
+        run: |
+          make lint bin_path=/home/runner/go/bin/
 
       - name: test
-        run: 
-          make --makefile="mkd.mk" redis-create redis_port=6399 & make test
+        run: make test
 
       - name: build
         run: make build

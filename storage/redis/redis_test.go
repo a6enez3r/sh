@@ -1,9 +1,9 @@
 package redis
 
 import (
+	"github.com/stretchr/testify/assert"
 	"os"
 	"sh/base62"
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )

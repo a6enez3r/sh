@@ -1,4 +1,5 @@
 pn := sh
+tn := tests
 
 ifeq ($(version),)
 version := 0.0.1
@@ -9,17 +10,26 @@ endif
 ifeq ($(branch),)
 branch := main
 endif
-ifeq ($(${docker_env}),)
-docker_env := development
+ifeq ($(pytest_opts),)
+pytest_opts := -vv
 endif
-ifeq ($(container_name),)
-container_name := jak_${docker_env}
+ifeq ($(dep_type),)
+dep_type := development
 endif
 ifeq ($(container_tag),)
-container_tag := latest
+container_tag := ${dep_type}
+endif
+ifeq ($(durations),)
+durations := 10
 endif
 ifeq ($(${dep_cmd}),)
 dep_cmd := install
+endif
+ifeq ($(${docker_env}),)
+docker_env := development
+endif
+ifeq ($($(bin_path)),)
+bin_path := /Users/abenezer/go/1.18.0/bin/
 endif
 
 .DEFAULT_GOAL := help
@@ -82,13 +92,13 @@ help:
 
 ## -- git --
 
-## save changes locally using git
+## save changes locally [git]
 save-local:
 	@echo "saving..."
 	@git add .
 	@git commit -m "${commit_message}"
 
-## save changes to remote using git
+## save changes to remote [git]
 save-remote:
 	@echo "saving to remote..."
 	@git push origin ${branch}
@@ -96,88 +106,88 @@ save-remote:
 ## pull changes from remote
 pull-remote:
 	@echo "pulling from remote..."
-	@git merge origin ${branch}
+	@git pull origin ${branch}
 
 ## create new tag, recreate if it exists
 tag:
 	@git tag -d ${version} || : 
 	@git push --delete origin ${version} || : 
-	@git tag -a ${version} -m "latest" 
+	@git tag -a ${version} -m "latest version" 
 	@git push origin --tags
 
 ## -- go --
 
-## install deps [dev]
+## install deps
 deps:
-	# gosec
-	# sudo curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v2.9.5
-	# golines
-	go ${dep_cmd} github.com/segmentio/golines@latest
-	# errcheck
-	go ${dep_cmd} github.com/kisielk/errcheck@latest
-	# dupl
-	go ${dep_cmd} github.com/mibk/dupl@latest
-	# golint
-	go get golang.org/x/lint/golint
+	# tools
+	@sudo curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sudo sh -s -- -b $(shell go env GOPATH)/bin v2.9.5
+	@go ${dep_cmd} golang.org/x/lint/golint@latest
+	@go ${dep_cmd} go101.org/golds@latest
+	@go ${dep_cmd} github.com/segmentio/golines@latest
+	@go ${dep_cmd} github.com/kisielk/errcheck@latest
+	@go ${dep_cmd} github.com/mibk/dupl@latest
 	# deps
-	go mod download
+	@go mod download
 	
 ## cross platform build
+build-all:
+	@rm -rf builds && mkdir builds && chmod +x ./scripts/go-build-all && ./scripts/go-build-all && mv ${pn}-* builds
+
+## current platform build
 build:
-	rm -rf builds && mkdir builds && chmod +x ./scripts/go-build-all && ./scripts/go-build-all && mv ${pn}-* builds
+	@go build -o ${pn} main.go cli.go
 
 ## run package
 run:
-	go run main.go
+	@go run main.go cli.go
 
 ## test package
 test:
-	go test -v ./...
+	@go test -v ./...
 
 ## benchmark package
 benchmark:
-	go test -bench=. main.go
+	@go test -bench=. ./jak/
 
 ## test coverage
 coverage:
-	go test -v ./... -coverprofile cp.out && go tool cover -html=cp.out
+	@go test -v ./... -coverprofile cp.out && go tool cover -html=cp.out
 
 ## vet modules
 vet:
-	go vet .
+	@go vet .
 
 ## -- code quality --
 
-UNAME_S := $(shell uname -s)
-
 ## lint package
 lint:
-ifeq ($(UNAME_S),Linux)
-	@~/go/bin/golint .
-endif
-ifeq ($(UNAME_S),Darwin)
-	@golint .
-endif
+	@${bin_path}golint .
 
 ## format package
 format:
-	golines -w main.go
-	golines -w base62
-	golines -w config
-	golines -w handler
-	golines -w storage
+	@${bin_path}golines -w main.go
+	@${bin_path}golines -w base62
+	@${bin_path}golines -w config
+	@${bin_path}golines -w handler
+	@${bin_path}golines -w storage
 
 ## scan package for duplicate code [dupl]
 scan-duplicate:
-	dupl .
+	@${bin_path}dupl .
 
 ## scan package for errors [errcheck]
 scan-errors:
-	errcheck ./...
+	@${bin_path}errcheck ./...
 
 ## scan package for security issues [gosec]
 scan-security:
-	gosec ./...
+	@${bin_path}gosec ./...
+
+## -- docs --
+
+## serve docs [godoc]
+docs-serve:
+	${bin_path}golds ./...
 
 ## -- docker --
 
@@ -219,8 +229,8 @@ status-env:
 
 ## init env + install common tools
 init-env:
-	apk update
-	apk add --update curl
-	apk add --update sudo
-	apk add --update bash
-	apk add --update ncurses
+	@apk update
+	@apk add --update curl
+	@apk add --update sudo
+	@apk add --update bash
+	@apk add --update ncurses

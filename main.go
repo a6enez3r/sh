@@ -1,10 +1,10 @@
 package main
 
 import (
+	"log"
 	"sh/config"
 	"sh/handler"
 	"sh/storage/redis"
-	"log"
 
 	"github.com/valyala/fasthttp"
 )

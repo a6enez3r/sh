@@ -3,10 +3,10 @@ package redis
 import (
 	"errors"
 	"fmt"
-	"sh/base62"
-	"sh/storage"
 	redisClient "github.com/garyburd/redigo/redis"
 	"math/rand"
+	"sh/base62"
+	"sh/storage"
 	"strconv"
 	"time"
 )
