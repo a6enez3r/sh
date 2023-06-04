@@ -1,0 +1,13 @@
+# Base image
+FROM golang:alpine
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
+WORKDIR /build
+COPY . /build
+RUN apk add --update make
+RUN make init-env
+RUN make deps
+RUN make vet
+ENTRYPOINT ["tail", "-f", "/dev/null"]

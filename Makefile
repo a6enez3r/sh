@@ -19,6 +19,9 @@ endif
 ifeq ($(container_tag),)
 container_tag := ${dep_type}
 endif
+ifeq ($(docker_env),)
+docker_env := development
+endif
 ifeq ($(durations),)
 durations := 10
 endif
@@ -135,11 +138,11 @@ build-all:
 
 ## current platform build
 build:
-	@go build -o ${pn} main.go
+	@go build -o ${pn} main.go cli.go
 
 ## run package
 run:
-	@go run main.go
+	@go run main.go cli.go
 
 ## test package
 test:
@@ -166,10 +169,8 @@ lint:
 ## format package
 format:
 	@${bin_path}golines -w main.go
-	@${bin_path}golines -w base62
-	@${bin_path}golines -w config
-	@${bin_path}golines -w handler
-	@${bin_path}golines -w storage
+	@${bin_path}golines -w cli.go
+	@${bin_path}golines -w blackjack
 
 ## scan package for duplicate code [dupl]
 scan-duplicate:
@@ -193,19 +194,19 @@ docs-serve:
 
 ## build docker env
 build-env:
-	@docker build -t ${container_name}:${container_tag} -f dockerfiles/Dockerfile.${docker_env} .
+	@docker build -t ${pn}:${container_tag} -f dockerfiles/Dockerfile.${docker_env} .
 
 ## start docker env
 up-env: build-env
-	$(eval cid = $(shell (docker ps -aqf "name=${container_name}")))
+	$(eval cid = $(shell (docker ps -aqf "name=${pn}")))
 	$(if $(strip $(cid)), \
 		@echo "existing env container found. please run make purge-env",\
-		@echo "running env container..." && docker run -it -d -v $(CURDIR):/go/src/ --name ${container_name} ${container_name}:${container_tag} /bin/bash)
+		@echo "running env container..." && docker run -it -d -v $(CURDIR):/go/src/ --name ${pn} ${pn}:${container_tag} /bin/bash)
 	$(endif)
 
 ## exec. into docker env
 exec-env:
-	$(eval cid = $(shell (docker ps -aqf "name=${container_name}")))
+	$(eval cid = $(shell (docker ps -aqf "name=${pn}")))
 	$(if $(strip $(cid)), \
 		@echo "exec into env container..." && docker exec -it ${cid} bash,\
 		@echo "env container not running.")
@@ -213,15 +214,15 @@ exec-env:
 
 ## remove docker env
 purge-env:
-	$(eval cid = $(shell (docker ps -aqf "name=${container_name}")))
+	$(eval cid = $(shell (docker ps -aqf "name=${pn}")))
 	$(if $(strip $(cid)), \
-		@echo "purging env container..." && docker stop ${container_name} && docker rm ${container_name},\
+		@echo "purging env container..." && docker stop ${pn} && docker rm ${pn},\
 		@echo "env container not running.")
 	$(endif)
 
 ## get status of docker env
 status-env:
-	$(eval cid = $(shell (docker ps -aqf "name=${container_name}")))
+	$(eval cid = $(shell (docker ps -aqf "name=${pn}")))
 	$(if $(strip $(cid)), \
 		@echo "container running",\
 		@echo "container not running.")
